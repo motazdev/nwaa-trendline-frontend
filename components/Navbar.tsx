@@ -5,13 +5,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { MenuIcon } from "lucide-react";
 import Image from "next/image";
 import LanuageChangeButton from "./LanuageChangeButton";
 import NavbarItems from "./NavbarItems";
 import NotificationComponent from "./NotificationComponent";
 import ShoppingCartIcon from "./svgs/ShoppingCartIcon";
 import UserIcon from "./svgs/UserIcon";
+import MobileNav from "./MobileNav";
 const Navbar = () => {
   return (
     <div className="bg-[#E8EDF2] z-50 flex flex-row justify-between items-center  py-2">
@@ -22,8 +22,9 @@ const Navbar = () => {
         <NavbarItems />
       </div>
       <div className="md:hidden flex">
-        <MenuIcon />
+        <MobileNav />
       </div>
+
       <div className="hidden z-50 flex-row lg:gap-6 md:gap-5 items-center md:flex">
         <ShoppingCartIcon />
         <NotificationComponent />
