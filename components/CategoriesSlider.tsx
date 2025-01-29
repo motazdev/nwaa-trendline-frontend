@@ -25,6 +25,20 @@ const CategoriesSlider = ({ categories }: { categories: Category[] }) => {
     speed: 500,
     slidesToShow: 7,
     slidesToScroll: 1,
+    responsive: [
+      {
+        breakpoint: 1024, // Tablets
+        settings: {
+          slidesToShow: 5,
+        },
+      },
+      {
+        breakpoint: 768, // Mobile devices
+        settings: {
+          slidesToShow: 3,
+        },
+      },
+    ],
   };
   const t = useTranslations();
   return (
