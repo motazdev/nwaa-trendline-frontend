@@ -1,27 +1,52 @@
 "use client";
 import { Category } from "@/lib/types";
 import Image from "next/image";
-import React, { useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Slider from "react-slick";
 import ChairImage from "@/app/chair.png";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useTranslations } from "next-intl";
-const CategoriesSlider = ({ categories }: { categories: Category[] }) => {
+import { getCategories } from "@/lib/actions/categories";
+import { Skeleton } from "@/components/ui/skeleton";
+
+const CategoriesSlider = () => {
   const sliderRef = useRef<Slider | null>(null);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [lastPage, setLastPage] = useState(1);
+  const [loading, setLoading] = useState(false);
+  useEffect(() => {
+    const fetchCategories = async () => {
+      setLoading(true);
+      const data = await getCategories(currentPage);
+      console.log({ data });
+      setCategories(data.data.data); // Extract category list
+      setLastPage(data.data.meta.last_page); // Extract last page
+      setLoading(false);
+    };
+    fetchCategories();
+  }, [currentPage]);
+
   console.log({ categories });
   const next = () => {
-    if (sliderRef.current) {
-      sliderRef.current.slickNext();
+    if (currentPage < lastPage) {
+      setCurrentPage((prev) => prev + 1);
     }
+    // if (sliderRef.current) {
+    //   sliderRef.current.slickNext();
+    // }
   };
   const previous = () => {
-    if (sliderRef.current) {
-      sliderRef.current.slickPrev();
+    if (currentPage > 1) {
+      setCurrentPage((prev) => prev - 1);
     }
+    // if (sliderRef.current) {
+    //   sliderRef.current.slickPrev();
+    // }
   };
-  const settings = {
+  const sliderSettings = {
     dots: false,
-    infinite: true,
+    infinite: false,
     speed: 500,
     slidesToShow: 7,
     slidesToScroll: 1,
@@ -43,29 +68,44 @@ const CategoriesSlider = ({ categories }: { categories: Category[] }) => {
   const t = useTranslations();
   return (
     <div className="flex flex-col gap-4">
-      <Slider
-        className="flex gap-32"
-        ref={(slider) => {
-          sliderRef.current = slider;
-        }}
-        {...settings}
-      >
-        {categories?.map((category) => (
-          <div key={category.id}>
-            <div className="flex flex-col justify-center items-center gap-4 px-10">
-              <div className="relative h-40 w-40  bg-[#F5F5F5] rounded-3xl">
-                <Image
-                  src={ChairImage}
-                  alt={category.name}
-                  fill
-                  className="object-cover p-4"
-                />
+      {loading ? (
+        <Slider {...sliderSettings}>
+          {Array.from({ length: 7 }).map((_, index) => (
+            <div key={index} className=" px-10">
+              <div className="flex flex-col items-center gap-4 px-10">
+                <Skeleton className="md:w-[160px] md:h-[160px] w-[128px] h-[128px] rounded-3xl" />
+                <Skeleton className="md:w-[100px] md:h-[30px] w-[100px] mb-4 h-[30px] rounded-3xl" />
               </div>
-              <h1>{t(category.name)}</h1>
             </div>
-          </div>
-        ))}
-      </Slider>
+          ))}
+        </Slider>
+      ) : (
+        <>
+          <Slider
+            className="flex gap-32"
+            ref={(slider) => {
+              sliderRef.current = slider;
+            }}
+            {...sliderSettings}
+          >
+            {categories?.map((category) => (
+              <div key={category.id}>
+                <div className="flex flex-col justify-center items-center gap-4 ">
+                  <div className="relative md:h-40 md:w-40 h-32 w-32  bg-[#F5F5F5] rounded-3xl">
+                    <Image
+                      src={ChairImage}
+                      alt={category.name}
+                      fill
+                      className="object-cover p-4"
+                    />
+                  </div>
+                  <h1>{t(category.name)}</h1>
+                </div>
+              </div>
+            ))}
+          </Slider>
+        </>
+      )}
       <div className="flex justify-center gap-4" dir="ltr">
         <div
           className="bg-[#E8EDF2] p-3 rounded-xl flex text-center cursor-pointer justify-center "
