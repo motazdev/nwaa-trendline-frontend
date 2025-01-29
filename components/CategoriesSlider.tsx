@@ -69,11 +69,11 @@ const CategoriesSlider = () => {
   return (
     <div className="flex flex-col gap-4">
       {loading ? (
-        <Slider {...sliderSettings}>
+        <Slider className="flex gap-32 overflow-hidden" {...sliderSettings}>
           {Array.from({ length: 7 }).map((_, index) => (
-            <div key={index} className=" px-10">
+            <div key={index} className=" ">
               <div className="flex flex-col items-center gap-4 px-10">
-                <Skeleton className="md:w-[160px] md:h-[160px] w-[128px] h-[128px] rounded-3xl" />
+                <Skeleton className="md:h-40 md:w-40 sm:h-28 sm:w-28 h-24 w-24 rounded-3xl" />
                 <Skeleton className="md:w-[100px] md:h-[30px] w-[100px] mb-4 h-[30px] rounded-3xl" />
               </div>
             </div>
@@ -82,7 +82,7 @@ const CategoriesSlider = () => {
       ) : (
         <>
           <Slider
-            className="flex gap-32"
+            className="flex gap-32 overflow-hidden"
             ref={(slider) => {
               sliderRef.current = slider;
             }}
@@ -91,7 +91,7 @@ const CategoriesSlider = () => {
             {categories?.map((category) => (
               <div key={category.id}>
                 <div className="flex flex-col justify-center items-center gap-4 ">
-                  <div className="relative md:h-40 md:w-40 h-32 w-32  bg-[#F5F5F5] rounded-3xl">
+                  <div className="relative md:h-40 md:w-40 sm:h-28 sm:w-28 h-24 w-24 bg-[#F5F5F5] rounded-3xl">
                     <Image
                       src={ChairImage}
                       alt={category.name}
