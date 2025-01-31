@@ -1,9 +1,9 @@
+"use client";
 import AppBreadCrumb from "@/components/AppBreadCrumb";
 import AppContainer from "@/components/AppContainer";
 import CategoriesSlider from "@/components/CategoriesSlider";
 import Header from "@/components/Header";
-
-export default async function Home() {
+export default function Home() {
   return (
     <div className="bg-[#fefefe]">
       <Header />
